@@ -1,4 +1,4 @@
-module github.com/LayerXcom/freee-go
+module github.com/advalistar/freee-go
 
 go 1.15
 
