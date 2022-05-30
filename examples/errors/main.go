@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/LayerXcom/freee-go"
+	"github.com/advalistar/freee-go"
 	"golang.org/x/oauth2"
 )
 

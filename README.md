@@ -2,8 +2,8 @@
 
 会計 freee API のクライアントライブラリ
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/layerxcom/freee-go.svg)](https://pkg.go.dev/github.com/layerxcom/freee-go)
-[![test](https://github.com/LayerXcom/freee-go/actions/workflows/tests.yaml/badge.svg)](https://github.com/LayerXcom/freee-go/actions/workflows/tests.yaml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/advalistar/freee-go.svg)](https://pkg.go.dev/github.com/advalistar/freee-go)
+[![test](https://github.com/advalistar/freee-go/actions/workflows/tests.yaml/badge.svg)](https://github.com/advalistar/freee-go/actions/workflows/tests.yaml)
 
 ## Usage
 
@@ -16,7 +16,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/LayerXcom/freee-go"
+	"github.com/advalistar/freee-go"
 	"golang.org/x/oauth2"
 )
 

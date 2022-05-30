@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/LayerXcom/freee-go"
+	"github.com/advalistar/freee-go"
 	"golang.org/x/oauth2"
 )
 
