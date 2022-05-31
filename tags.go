@@ -51,81 +51,66 @@ type GetTagsOpts struct {
 	Limit  uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) GetTags(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetTagsOpts,
-) (*Tags, *oauth2.Token, error) {
+func (c *Client) GetTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetTagsOpts) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, APIPathTags, http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, APIPathTags, http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) CreateTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params TagParams,
-) (*Tag, *oauth2.Token, error) {
+func (c *Client) CreateTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, params TagParams) (*Tag, error) {
 	var result TagResponse
-	oauth2Token, err := c.call(ctx, APIPathTags, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathTags, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Tag, oauth2Token, nil
+	return &result.Tag, nil
 }
 
-func (c *Client) GetTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, tagID uint32, opts GetTagsOpts,
-) (*Tags, *oauth2.Token, error) {
+func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID uint32, opts GetTagsOpts) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) UpdateTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	tagID uint32, params TagParams,
-) (*Tag, *oauth2.Token, error) {
+func (c *Client) UpdateTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, tagID uint32, params TagParams) (*Tag, error) {
 	var result TagResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Tag, oauth2Token, nil
+	return &result.Tag, nil
 }
 
-func (c *Client) DestroyTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, tagID int32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroyTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }

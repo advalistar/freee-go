@@ -109,19 +109,16 @@ type GetCompanyOpts struct {
 	Walletables  *bool
 }
 
-func (c *Client) GetCompany(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetCompanyOpts,
-) (*CompanyResponse, *oauth2.Token, error) {
+func (c *Client) GetCompany(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetCompanyOpts) (*CompanyResponse, error) {
 	var result CompanyResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	oauth2Token, err = c.call(ctx, path.Join(APIPathCompanies, fmt.Sprint(companyID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathCompanies, fmt.Sprint(companyID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result, oauth2Token, nil
+	return &result, nil
 }

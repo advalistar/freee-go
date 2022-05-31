@@ -185,67 +185,55 @@ type GetManualJournalsOpts struct {
 	Limit     uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) CreateManualJournal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params CreateManualJournalParams,
-) (*ManualJournalResponse, *oauth2.Token, error) {
+func (c *Client) CreateManualJournal(ctx context.Context, reuseTokenSource oauth2.TokenSource, params CreateManualJournalParams) (*ManualJournalResponse, error) {
 	var result ManualJournalResponse
 
-	oauth2Token, err := c.call(ctx, APIPathManualJournals, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathManualJournals, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) UpdateManualJournal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	journalID int32, params UpdateManualJournalParams,
-) (*ManualJournalResponse, *oauth2.Token, error) {
+func (c *Client) UpdateManualJournal(ctx context.Context, reuseTokenSource oauth2.TokenSource, journalID int32, params UpdateManualJournalParams) (*ManualJournalResponse, error) {
 	var result ManualJournalResponse
 
-	oauth2Token, err := c.call(ctx, path.Join(APIPathManualJournals, fmt.Sprint(journalID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathManualJournals, fmt.Sprint(journalID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) DestroyManualJournal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, journalID int32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroyManualJournal(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, journalID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathManualJournals, fmt.Sprint(journalID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathManualJournals, fmt.Sprint(journalID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }
 
-func (c *Client) GetManualJournals(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetManualJournalsOpts,
-) (*ManualJournalsResponse, *oauth2.Token, error) {
+func (c *Client) GetManualJournals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetManualJournalsOpts) (*ManualJournalsResponse, error) {
 	var result ManualJournalsResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathManualJournals), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathManualJournals), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }

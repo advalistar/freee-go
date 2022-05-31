@@ -272,78 +272,65 @@ type DealUpdateParamsDetails struct {
 	Vat *int32 `json:"vat,omitempty"`
 }
 
-func (c *Client) GetDeals(ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetDealOpts) (*DealsResponse, *oauth2.Token, error) {
+func (c *Client) GetDeals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetDealOpts) (*DealsResponse, error) {
 	var result DealsResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathDeals), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathDeals), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) GetDeal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, dealID uint64, opts GetDealOpts,
-) (*Deal, *oauth2.Token, error) {
+func (c *Client) GetDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, dealID uint64, opts GetDealOpts) (*Deal, error) {
 	var result DealResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Deal, oauth2Token, nil
+	return &result.Deal, nil
 }
 
-func (c *Client) CreateDeal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params DealCreateParams,
-) (*Deal, *oauth2.Token, error) {
+func (c *Client) CreateDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, params DealCreateParams) (*Deal, error) {
 	var result DealResponse
-	oauth2Token, err := c.call(ctx, APIPathDeals, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathDeals, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Deal, oauth2Token, nil
+	return &result.Deal, nil
 }
 
-func (c *Client) UpdateDeal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	dealID uint64, params DealUpdateParams,
-) (*Deal, *oauth2.Token, error) {
+func (c *Client) UpdateDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, dealID uint64, params DealUpdateParams) (*Deal, error) {
 	var result DealResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Deal, oauth2Token, nil
+	return &result.Deal, nil
 }
 
-func (c *Client) DestroyDeal(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, dealID uint64,
-) (*oauth2.Token, error) {
+func (c *Client) DestroyDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, dealID uint64) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathDeals, fmt.Sprint(dealID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }

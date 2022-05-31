@@ -56,21 +56,18 @@ type AccountItem struct {
 	CorrespondingExpenseID *int32 `json:"corresponding_expense_id,omitempty"`
 }
 
-func (c *Client) GetAccountItems(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetAccountItemsOpts,
-) (*AccountItems, *oauth2.Token, error) {
+func (c *Client) GetAccountItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetAccountItemsOpts) (*AccountItems, error) {
 	var result AccountItems
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, APIPathAccountItems, http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, APIPathAccountItems, http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }

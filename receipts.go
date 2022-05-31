@@ -74,37 +74,31 @@ type UserCreatedReceipt struct {
 	DisplayName string `json:"display_name,omitempty"`
 }
 
-func (c *Client) CreateReceipt(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params CreateReceiptParams,
-	receiptName string,
-) (*ReceiptResponse, *oauth2.Token, error) {
+func (c *Client) CreateReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSource, params CreateReceiptParams, receiptName string) (*ReceiptResponse, error) {
 	postBody := map[string]string{
 		"company_id":  fmt.Sprint(params.CompanyID),
 		"description": params.Description,
 		"issue_date":  params.IssueDate,
 	}
 	var result ReceiptResponse
-	oauth2Token, err := c.postFiles(ctx, APIPathReceipts, http.MethodPost, oauth2Token, nil, postBody, receiptName, params.Receipt, &result)
+	err := c.postFiles(ctx, APIPathReceipts, http.MethodPost, reuseTokenSource, nil, postBody, receiptName, params.Receipt, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) GetReceipt(
-	ctx context.Context, oauth2Token *oauth2.Token, companyID uint32, receiptID int32,
-) (*ReceiptResponse, *oauth2.Token, error) {
+func (c *Client) GetReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, receiptID int32) (*ReceiptResponse, error) {
 	var result ReceiptResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathReceipts, fmt.Sprint(receiptID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathReceipts, fmt.Sprint(receiptID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result, oauth2Token, nil
+	return &result, nil
 }

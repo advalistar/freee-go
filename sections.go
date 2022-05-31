@@ -50,62 +50,50 @@ type SectionParams struct {
 	ParentID *int32 `json:"parent_id,omitempty"`
 }
 
-func (c *Client) GetSections(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32,
-) (*Sections, *oauth2.Token, error) {
+func (c *Client) GetSections(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32) (*Sections, error) {
 	var result Sections
 
 	v, err := query.Values(nil)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, APIPathSections, http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, APIPathSections, http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) CreateSection(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params SectionParams,
-) (*Section, *oauth2.Token, error) {
+func (c *Client) CreateSection(ctx context.Context, reuseTokenSource oauth2.TokenSource, params SectionParams) (*Section, error) {
 	var result SectionResponse
-	oauth2Token, err := c.call(ctx, APIPathSections, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathSections, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Section, oauth2Token, nil
+	return &result.Section, nil
 }
 
-func (c *Client) UpdateSection(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	sectionID uint32, params SectionParams,
-) (*Section, *oauth2.Token, error) {
+func (c *Client) UpdateSection(ctx context.Context, reuseTokenSource oauth2.TokenSource, sectionID uint32, params SectionParams) (*Section, error) {
 	var result SectionResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathSections, fmt.Sprint(sectionID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathSections, fmt.Sprint(sectionID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Section, oauth2Token, nil
+	return &result.Section, nil
 }
 
-func (c *Client) DestroySection(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, sectionID int32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroySection(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, sectionID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathSections, fmt.Sprint(sectionID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathSections, fmt.Sprint(sectionID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }

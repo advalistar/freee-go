@@ -3,21 +3,22 @@ package freee
 import (
 	"context"
 	"fmt"
-	"github.com/google/go-querystring/query"
-	"golang.org/x/oauth2"
 	"net/http"
 	"path"
+
+	"github.com/google/go-querystring/query"
+	"golang.org/x/oauth2"
 )
 
 const (
 	APIPathTxns = "wallet_txns"
 
 	WalletTypeBankAccount = "bank_account"
-	WalletTypeCreditCard = "credit_card"
-	WalletTypeWallet = "wallet" //現金
+	WalletTypeCreditCard  = "credit_card"
+	WalletTypeWallet      = "wallet" // 現金
 
-	TxnsTypeIncome      = "income"
-	TxnsTypeExpense      = "expense"
+	TxnsTypeIncome  = "income"
+	TxnsTypeExpense = "expense"
 )
 
 type WalletTxnsResponse struct {
@@ -33,18 +34,18 @@ type GetWalletTxnOpts struct {
 	// 口座区分 (銀行口座: bank_account, クレジットカード: credit_card, 現金: wallet)
 	WalletableType string `url:"walletable_type,omitempty"`
 	// 口座ID
-	WalletableID   uint64  `url:"walletable_id,omitempty"`
+	WalletableID uint64 `url:"walletable_id,omitempty"`
 
 	// 取引日で絞込：開始日 (yyyy-mm-dd)
-	StartDate 	 string `url:"start_date,omitempty"`
+	StartDate string `url:"start_date,omitempty"`
 	// 取引日で絞込：終了日 (yyyy-mm-dd)
-	EndDate 	 string `url:"end_date,omitempty"`
+	EndDate string `url:"end_date,omitempty"`
 	// 入金／出金 (入金: income, 出金: expense)
 	EntrySide string `url:"entry_side,omitempty"`
 	// 取得レコードのオフセット (デフォルト: 0)
-	Offset   uint32 `url:"offset,omitempty"`
+	Offset uint32 `url:"offset,omitempty"`
 	// 取得レコードの件数 (デフォルト: 20, 最小: 1, 最大: 100)
-	Limit    uint32 `url:"limit,omitempty"`
+	Limit uint32 `url:"limit,omitempty"`
 }
 
 type WalletTxn struct {
@@ -72,50 +73,44 @@ type WalletTxn struct {
 	Status uint `json:"status"`
 }
 
-func (c *Client) GetWalletTransactions(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetWalletTxnOpts) (*WalletTxnsResponse,  *oauth2.Token, error) {
+func (c *Client) GetWalletTransactions(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetWalletTxnOpts) (*WalletTxnsResponse, error) {
 	var result WalletTxnsResponse
 
-	if (opts.WalletableType != "" && opts.WalletableID == 0)  || (opts.WalletableID != 0 && opts.WalletableType == "") {
-		return nil, oauth2Token, fmt.Errorf("either walletable_type or walletable_id is specified, then other value must be set")
+	if (opts.WalletableType != "" && opts.WalletableID == 0) || (opts.WalletableID != 0 && opts.WalletableType == "") {
+		return nil, fmt.Errorf("either walletable_type or walletable_id is specified, then other value must be set")
 	}
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathTxns), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathTxns), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-
-func (c *Client) GetWalletTransaction(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, txnID uint64, opts GetWalletTxnOpts,
-) (*WalletTxn,  *oauth2.Token, error) {
+func (c *Client) GetWalletTransaction(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, txnID uint64, opts GetWalletTxnOpts) (*WalletTxn, error) {
 	var result WalletTxnResponse
 
-	if (opts.WalletableType != "" && opts.WalletableID == 0)  || (opts.WalletableID != 0 && opts.WalletableType == "") {
-		return nil, oauth2Token, fmt.Errorf("either walletable_type or walletable_id is specified, then other value must be set")
+	if (opts.WalletableType != "" && opts.WalletableID == 0) || (opts.WalletableID != 0 && opts.WalletableType == "") {
+		return nil, fmt.Errorf("either walletable_type or walletable_id is specified, then other value must be set")
 	}
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathTxns, fmt.Sprint(txnID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathTxns, fmt.Sprint(txnID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result.WalletTxn, oauth2Token, nil
+	return &result.WalletTxn, nil
 }

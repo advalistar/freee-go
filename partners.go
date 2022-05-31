@@ -205,21 +205,18 @@ type CreatePartnerParamsPaymentTermAttributes struct {
 	FixedDay int32 `json:"fixed_day,omitempty"`
 }
 
-func (c *Client) CreatePartner(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params CreatePartnerParams,
-) (*Partner, *oauth2.Token, error) {
+func (c *Client) CreatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, params CreatePartnerParams) (*Partner, error) {
 	var result PartnerResponse
 
-	oauth2Token, err := c.call(ctx, APIPathPartners, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathPartners, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	if &result == nil || &result.Partner == nil {
-		return nil, oauth2Token, errors.New("failed to parse response")
+		return nil, errors.New("failed to parse response")
 	}
-	return &result.Partner, oauth2Token, nil
+	return &result.Partner, nil
 }
 
 type UpdatePartnerParams struct {
@@ -258,21 +255,18 @@ type UpdatePartnerParams struct {
 	InvoicePaymentTermAttributes CreatePartnerParamsPaymentTermAttributes        `json:"invoice_payment_term_attributes,omitempty"`
 }
 
-func (c *Client) UpdatePartner(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	partnerID uint32, params UpdatePartnerParams,
-) (*Partner, *oauth2.Token, error) {
+func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, partnerID uint32, params UpdatePartnerParams) (*Partner, error) {
 	var result PartnerResponse
 
-	oauth2Token, err := c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	if &result == nil || &result.Partner == nil {
-		return nil, oauth2Token, errors.New("failed to parse response")
+		return nil, errors.New("failed to parse response")
 	}
-	return &result.Partner, oauth2Token, nil
+	return &result.Partner, nil
 }
 
 type GetPartnersOpts struct {
@@ -281,38 +275,32 @@ type GetPartnersOpts struct {
 	Keyword string `url:"keyword,omitempty"`
 }
 
-func (c *Client) GetPartners(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetPartnersOpts,
-) (*Partners, *oauth2.Token, error) {
+func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetPartnersOpts) (*Partners, error) {
 	var result Partners
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, APIPathPartners, http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, APIPathPartners, http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) DestroyPartner(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, partnerID int32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroyPartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, partnerID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }

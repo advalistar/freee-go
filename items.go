@@ -55,63 +55,50 @@ type ItemParams struct {
 	Shortcut2 *string `json:"shortcut2,omitempty"`
 }
 
-func (c *Client) GetItems(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetItemsOpts,
-) (*Items, *oauth2.Token, error) {
+func (c *Client) GetItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetItemsOpts) (*Items, error) {
 	var result Items
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, APIPathItems, http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, APIPathItems, http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) CreateItem(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params ItemParams,
-) (*Item, *oauth2.Token, error) {
+func (c *Client) CreateItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, params ItemParams) (*Item, error) {
 	var result ItemResponse
-	oauth2Token, err := c.call(ctx, APIPathItems, http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, APIPathItems, http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Item, oauth2Token, nil
+	return &result.Item, nil
 }
 
-func (c *Client) UpdateItem(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	params ItemParams,
-	itemID uint32,
-) (*Item, *oauth2.Token, error) {
+func (c *Client) UpdateItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, params ItemParams, itemID uint32) (*Item, error) {
 	var result ItemResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathItems, fmt.Sprint(itemID)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathItems, fmt.Sprint(itemID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.Item, oauth2Token, nil
+	return &result.Item, nil
 }
 
-func (c *Client) DestroyItem(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, itemID int32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroyItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, itemID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathItems, fmt.Sprint(itemID)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathItems, fmt.Sprint(itemID)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }

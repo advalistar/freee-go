@@ -3,10 +3,11 @@ package freee
 import (
 	"context"
 	"fmt"
-	"github.com/google/go-querystring/query"
-	"golang.org/x/oauth2"
 	"net/http"
 	"path"
+
+	"github.com/google/go-querystring/query"
+	"golang.org/x/oauth2"
 )
 
 const (
@@ -15,12 +16,12 @@ const (
 
 type WalletablesResponse struct {
 	Walletables []Walletable `json:"walletables"`
-	Meta		Meta         `json:"meta"`
+	Meta        Meta         `json:"meta"`
 }
 
 type WalletableResponse struct {
 	Walletable Walletable `json:"walletable"`
-	Meta		Meta         `json:"meta"`
+	Meta       Meta       `json:"meta"`
 }
 
 type Meta struct {
@@ -49,43 +50,36 @@ type Walletable struct {
 	WalletableBalance int64 `json:"walletable_balance,omitempty"`
 }
 
-func (c *Client) GetWalletables(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, opts GetWalletablesOpts,
-) (*WalletablesResponse, *oauth2.Token, error) {
+func (c *Client) GetWalletables(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetWalletablesOpts) (*WalletablesResponse, error) {
 	var result WalletablesResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathWalletables), http.MethodGet,oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathWalletables), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-
-func (c *Client) GetWalletable(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, walletableID uint64, opts GetWalletTxnOpts,
-) (*Walletable,  *oauth2.Token, error) {
+func (c *Client) GetWalletable(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, walletableID uint64, opts GetWalletTxnOpts) (*Walletable, error) {
 	var result WalletableResponse
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathWalletables, fmt.Sprint(walletableID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathWalletables, fmt.Sprint(walletableID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result.Walletable, oauth2Token, nil
+	return &result.Walletable, nil
 }

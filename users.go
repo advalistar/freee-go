@@ -50,19 +50,16 @@ type GetUsersMeOpts struct {
 	Companies bool `url:"companies,omitempty"`
 }
 
-func (c *Client) GetUsersMe(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	opts GetUsersMeOpts,
-) (*Me, *oauth2.Token, error) {
+func (c *Client) GetUsersMe(ctx context.Context, reuseTokenSource oauth2.TokenSource, opts GetUsersMeOpts) (*Me, error) {
 	var result Me
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	oauth2Token, err = c.call(ctx, path.Join(APIPathUsers, "me"), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathUsers, "me"), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result, oauth2Token, nil
+	return &result, nil
 }

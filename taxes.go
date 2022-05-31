@@ -41,20 +41,17 @@ type TaxCompany struct {
 	Available bool `json:"available"`
 }
 
-func (c *Client) GetTaxCompanies(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32,
-) (*TaxCompanies, *oauth2.Token, error) {
+func (c *Client) GetTaxCompanies(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32) (*TaxCompanies, error) {
 	var result TaxCompanies
 
 	v, err := query.Values(nil)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathTaxes, "companies", fmt.Sprint(companyID)), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathTaxes, "companies", fmt.Sprint(companyID)), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result, oauth2Token, nil
+	return &result, nil
 }

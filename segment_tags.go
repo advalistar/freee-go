@@ -56,65 +56,50 @@ type GetSegmentTagsOpts struct {
 	Limit  uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) GetSegmentTags(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32, segmentID uint32,
-	opts GetSegmentTagsOpts,
-) (*SegmentTags, *oauth2.Token, error) {
+func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, opts GetSegmentTagsOpts) (*SegmentTags, error) {
 	var result SegmentTags
 
 	v, err := query.Values(opts)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags"), http.MethodGet, oauth2Token, v, nil, &result)
+	err = c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags"), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
 
-	return &result, oauth2Token, nil
+	return &result, nil
 }
 
-func (c *Client) CreateSegmentTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	segmentID uint32, params SegmentTagParams,
-) (*SegmentTag, *oauth2.Token, error) {
+func (c *Client) CreateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID uint32, params SegmentTagParams) (*SegmentTag, error) {
 	var result SegmentTagResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags"), http.MethodPost, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags"), http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.SegmentTag, oauth2Token, nil
+	return &result.SegmentTag, nil
 }
 
-func (c *Client) UpdateSegmentTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	segmentID uint32, id uint32,
-	params SegmentTagParams,
-) (*SegmentTag, *oauth2.Token, error) {
+func (c *Client) UpdateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID uint32, id uint32, params SegmentTagParams) (*SegmentTag, error) {
 	var result SegmentTagResponse
-	oauth2Token, err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags", fmt.Sprint(id)), http.MethodPut, oauth2Token, nil, params, &result)
+	err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags", fmt.Sprint(id)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
-		return nil, oauth2Token, err
+		return nil, err
 	}
-	return &result.SegmentTag, oauth2Token, nil
+	return &result.SegmentTag, nil
 }
 
-func (c *Client) DestroySegmentTag(
-	ctx context.Context, oauth2Token *oauth2.Token,
-	companyID uint32,
-	segmentID uint32, id uint32,
-) (*oauth2.Token, error) {
+func (c *Client) DestroySegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, id uint32) error {
 	v, err := query.Values(nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 	SetCompanyID(&v, companyID)
-	oauth2Token, err = c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags", fmt.Sprint(id)), http.MethodDelete, oauth2Token, v, nil, nil)
+	err = c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags", fmt.Sprint(id)), http.MethodDelete, reuseTokenSource, v, nil, nil)
 	if err != nil {
-		return oauth2Token, err
+		return err
 	}
 
-	return oauth2Token, nil
+	return nil
 }
