@@ -56,7 +56,7 @@ type AccountItem struct {
 	CorrespondingExpenseID *int32 `json:"corresponding_expense_id,omitempty"`
 }
 
-func (c *Client) GetAccountItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetAccountItemsOpts) (*AccountItems, error) {
+func (c *Client) GetAccountItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*AccountItems, error) {
 	var result AccountItems
 
 	v, err := query.Values(opts)

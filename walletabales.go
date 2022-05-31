@@ -50,7 +50,7 @@ type Walletable struct {
 	WalletableBalance int64 `json:"walletable_balance,omitempty"`
 }
 
-func (c *Client) GetWalletables(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetWalletablesOpts) (*WalletablesResponse, error) {
+func (c *Client) GetWalletables(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*WalletablesResponse, error) {
 	var result WalletablesResponse
 
 	v, err := query.Values(opts)
@@ -67,7 +67,7 @@ func (c *Client) GetWalletables(ctx context.Context, reuseTokenSource oauth2.Tok
 	return &result, nil
 }
 
-func (c *Client) GetWalletable(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, walletableID uint64, opts GetWalletTxnOpts) (*Walletable, error) {
+func (c *Client) GetWalletable(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, walletableID uint64, opts interface{}) (*Walletable, error) {
 	var result WalletableResponse
 
 	v, err := query.Values(opts)

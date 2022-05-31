@@ -272,7 +272,7 @@ type DealUpdateParamsDetails struct {
 	Vat *int32 `json:"vat,omitempty"`
 }
 
-func (c *Client) GetDeals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetDealOpts) (*DealsResponse, error) {
+func (c *Client) GetDeals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*DealsResponse, error) {
 	var result DealsResponse
 
 	v, err := query.Values(opts)
@@ -288,7 +288,7 @@ func (c *Client) GetDeals(ctx context.Context, reuseTokenSource oauth2.TokenSour
 	return &result, nil
 }
 
-func (c *Client) GetDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, dealID uint64, opts GetDealOpts) (*Deal, error) {
+func (c *Client) GetDeal(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, dealID uint64, opts interface{}) (*Deal, error) {
 	var result DealResponse
 
 	v, err := query.Values(opts)

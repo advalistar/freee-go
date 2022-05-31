@@ -109,7 +109,7 @@ type GetCompanyOpts struct {
 	Walletables  *bool
 }
 
-func (c *Client) GetCompany(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetCompanyOpts) (*CompanyResponse, error) {
+func (c *Client) GetCompany(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*CompanyResponse, error) {
 	var result CompanyResponse
 
 	v, err := query.Values(opts)

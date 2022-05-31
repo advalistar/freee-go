@@ -50,7 +50,7 @@ type GetUsersMeOpts struct {
 	Companies bool `url:"companies,omitempty"`
 }
 
-func (c *Client) GetUsersMe(ctx context.Context, reuseTokenSource oauth2.TokenSource, opts GetUsersMeOpts) (*Me, error) {
+func (c *Client) GetUsersMe(ctx context.Context, reuseTokenSource oauth2.TokenSource, opts interface{}) (*Me, error) {
 	var result Me
 
 	v, err := query.Values(opts)

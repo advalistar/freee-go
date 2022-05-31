@@ -56,7 +56,7 @@ type GetSegmentTagsOpts struct {
 	Limit  uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, opts GetSegmentTagsOpts) (*SegmentTags, error) {
+func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, opts interface{}) (*SegmentTags, error) {
 	var result SegmentTags
 
 	v, err := query.Values(opts)

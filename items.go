@@ -55,7 +55,7 @@ type ItemParams struct {
 	Shortcut2 *string `json:"shortcut2,omitempty"`
 }
 
-func (c *Client) GetItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetItemsOpts) (*Items, error) {
+func (c *Client) GetItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Items, error) {
 	var result Items
 
 	v, err := query.Values(opts)

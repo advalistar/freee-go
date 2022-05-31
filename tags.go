@@ -51,7 +51,7 @@ type GetTagsOpts struct {
 	Limit  uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) GetTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetTagsOpts) (*Tags, error) {
+func (c *Client) GetTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)
@@ -76,7 +76,7 @@ func (c *Client) CreateTag(ctx context.Context, reuseTokenSource oauth2.TokenSou
 	return &result.Tag, nil
 }
 
-func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID uint32, opts GetTagsOpts) (*Tags, error) {
+func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID uint32, opts interface{}) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)

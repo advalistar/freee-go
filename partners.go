@@ -205,7 +205,7 @@ type CreatePartnerParamsPaymentTermAttributes struct {
 	FixedDay int32 `json:"fixed_day,omitempty"`
 }
 
-func (c *Client) CreatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, params CreatePartnerParams) (*Partner, error) {
+func (c *Client) CreatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, params interface{}) (*Partner, error) {
 	var result PartnerResponse
 
 	err := c.call(ctx, APIPathPartners, http.MethodPost, reuseTokenSource, nil, params, &result)
@@ -255,7 +255,7 @@ type UpdatePartnerParams struct {
 	InvoicePaymentTermAttributes CreatePartnerParamsPaymentTermAttributes        `json:"invoice_payment_term_attributes,omitempty"`
 }
 
-func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, partnerID uint32, params UpdatePartnerParams) (*Partner, error) {
+func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, partnerID uint32, params interface{}) (*Partner, error) {
 	var result PartnerResponse
 
 	err := c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodPut, reuseTokenSource, nil, params, &result)
@@ -275,7 +275,7 @@ type GetPartnersOpts struct {
 	Keyword string `url:"keyword,omitempty"`
 }
 
-func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetPartnersOpts) (*Partners, error) {
+func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Partners, error) {
 	var result Partners
 
 	v, err := query.Values(opts)

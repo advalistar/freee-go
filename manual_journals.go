@@ -221,7 +221,7 @@ func (c *Client) DestroyManualJournal(ctx context.Context, reuseTokenSource oaut
 	return nil
 }
 
-func (c *Client) GetManualJournals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts GetManualJournalsOpts) (*ManualJournalsResponse, error) {
+func (c *Client) GetManualJournals(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*ManualJournalsResponse, error) {
 	var result ManualJournalsResponse
 
 	v, err := query.Values(opts)
