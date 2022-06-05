@@ -3,6 +3,7 @@ package freee
 import (
 	"context"
 	"net/http"
+	"path"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -71,6 +72,29 @@ type RequestItem struct {
 	Value string `json:"value"`
 }
 
+type ApprovalRequestsForms struct {
+	ApprovalRequestsForms []ApprovalRequestsForm `json:"approval_request_forms"`
+}
+
+type ApprovalRequestsForm struct {
+	// 申請フォームID
+	ID int32 `json:"id"`
+	// 事業所ID
+	CompanyID int32 `json:"company_id"`
+	// 申請フォームの名前
+	Name string `json:"name"`
+	// 申請フォームの説明
+	Description string `json:"description"`
+	// ステータス(draft: 申請で使用しない、active: 申請で使用する、deleted: 削除済み)
+	Status string `json:"status"`
+	// 作成日時
+	CreatedDate string `json:"created_date"`
+	// 表示順（申請者が選択する申請フォームの表示順を設定できます。小さい数ほど上位に表示されます。（0を除く整数のみ。マイナス不可）未入力の場合、表示順が後ろになります。同じ数字が入力された場合、登録順で表示されます。）
+	FormOrder int32 `json:"form_order"`
+	// 適用された経路数
+	RouteSettingCount int32 `json:"route_setting_count"`
+}
+
 func (c *Client) GetApprovalRequests(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*ApprovalRequests, error) {
 	var result ApprovalRequests
 
@@ -80,6 +104,22 @@ func (c *Client) GetApprovalRequests(ctx context.Context, reuseTokenSource oauth
 	}
 	SetCompanyID(&v, companyID)
 	err = c.call(ctx, APIPathApprovalRequests, http.MethodGet, reuseTokenSource, v, nil, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+func (c *Client) GetApprovalRequestsForms(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*ApprovalRequestsForms, error) {
+	var result ApprovalRequestsForms
+
+	v, err := query.Values(nil)
+	if err != nil {
+		return nil, err
+	}
+	SetCompanyID(&v, companyID)
+	err = c.call(ctx, path.Join(APIPathApprovalRequests, "forms"), http.MethodGet, reuseTokenSource, v, nil, &result)
 	if err != nil {
 		return nil, err
 	}
