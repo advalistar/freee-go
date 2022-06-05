@@ -56,7 +56,7 @@ type GetSegmentTagsOpts struct {
 	Limit  uint32 `url:"limit,omitempty"`
 }
 
-func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, opts interface{}) (*SegmentTags, error) {
+func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, segmentID int32, opts interface{}) (*SegmentTags, error) {
 	var result SegmentTags
 
 	v, err := query.Values(opts)
@@ -72,7 +72,7 @@ func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.Tok
 	return &result, nil
 }
 
-func (c *Client) CreateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID uint32, params SegmentTagParams) (*SegmentTag, error) {
+func (c *Client) CreateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID int32, params SegmentTagParams) (*SegmentTag, error) {
 	var result SegmentTagResponse
 	err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags"), http.MethodPost, reuseTokenSource, nil, params, &result)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c *Client) CreateSegmentTag(ctx context.Context, reuseTokenSource oauth2.T
 	return &result.SegmentTag, nil
 }
 
-func (c *Client) UpdateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID uint32, id uint32, params SegmentTagParams) (*SegmentTag, error) {
+func (c *Client) UpdateSegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, segmentID int32, id int32, params SegmentTagParams) (*SegmentTag, error) {
 	var result SegmentTagResponse
 	err := c.call(ctx, path.Join(APIPathSegments, fmt.Sprint(segmentID), "tags", fmt.Sprint(id)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
@@ -90,7 +90,7 @@ func (c *Client) UpdateSegmentTag(ctx context.Context, reuseTokenSource oauth2.T
 	return &result.SegmentTag, nil
 }
 
-func (c *Client) DestroySegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, segmentID uint32, id uint32) error {
+func (c *Client) DestroySegmentTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, segmentID int32, id int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
 		return err

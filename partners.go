@@ -39,7 +39,7 @@ type Partner struct {
 	// 取引先ID
 	ID int32 `json:"id"`
 	// 取引先コード
-	Code *string `json:"code,omitempty"`
+	Code string `json:"code"`
 	// 事業所ID
 	CompanyID int32 `json:"company_id"`
 	// 取引先名
@@ -71,7 +71,7 @@ type Partner struct {
 	// 振込元口座ID（一括振込ファイル用）:（未設定の場合は、nullです。）
 	PayerWalletableID *int32 `json:"payer_walletable_id,omitempty"`
 	// 振込手数料負担（一括振込ファイル用）: (振込元(当方): payer, 振込先(先方): payee)
-	TransferFeeHandlingSide string `json:"transfer_fee_handling_side,omitempty"`
+	TransferFeeHandlingSide *string `json:"transfer_fee_handling_side,omitempty"`
 	//
 	AddressAttributes *PartnerAddressAttributes `json:"address_attributes,omitempty"`
 	//
@@ -255,7 +255,7 @@ type UpdatePartnerParams struct {
 	InvoicePaymentTermAttributes CreatePartnerParamsPaymentTermAttributes        `json:"invoice_payment_term_attributes,omitempty"`
 }
 
-func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, partnerID uint32, params interface{}) (*Partner, error) {
+func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, partnerID int32, params interface{}) (*Partner, error) {
 	var result PartnerResponse
 
 	err := c.call(ctx, path.Join(APIPathPartners, fmt.Sprint(partnerID)), http.MethodPut, reuseTokenSource, nil, params, &result)
@@ -270,12 +270,14 @@ func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.Toke
 }
 
 type GetPartnersOpts struct {
-	Offset  uint32 `url:"offset,omitempty"`
-	Limit   uint32 `url:"limit,omitempty"`
-	Keyword string `url:"keyword,omitempty"`
+	StartUpdateDate *string `url:"start_update_date,omitempty"`
+	EndUpdateDate   *string `url:"end_update_date,omitempty"`
+	Offset          *int32  `url:"offset,omitempty"`
+	Limit           *int32  `url:"limit,omitempty"`
+	Keyword         *string `url:"keyword,omitempty"`
 }
 
-func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Partners, error) {
+func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Partners, error) {
 	var result Partners
 
 	v, err := query.Values(opts)
@@ -291,7 +293,7 @@ func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenS
 	return &result, nil
 }
 
-func (c *Client) DestroyPartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, partnerID int32) error {
+func (c *Client) DestroyPartner(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, partnerID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
 		return err

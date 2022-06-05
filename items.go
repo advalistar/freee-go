@@ -40,8 +40,10 @@ type Item struct {
 }
 
 type GetItemsOpts struct {
-	Offset uint32 `url:"offset,omitempty"`
-	Limit  uint32 `url:"limit,omitempty"`
+	StartUpdateDate string `url:"start_update_date,omitempty"`
+	EndUpdateDate   string `url:"end_update_date,omitempty"`
+	Offset          int32  `url:"offset,omitempty"`
+	Limit           int32  `url:"limit,omitempty"`
 }
 
 type ItemParams struct {
@@ -55,7 +57,7 @@ type ItemParams struct {
 	Shortcut2 *string `json:"shortcut2,omitempty"`
 }
 
-func (c *Client) GetItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Items, error) {
+func (c *Client) GetItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Items, error) {
 	var result Items
 
 	v, err := query.Values(opts)
@@ -80,7 +82,7 @@ func (c *Client) CreateItem(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	return &result.Item, nil
 }
 
-func (c *Client) UpdateItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, params ItemParams, itemID uint32) (*Item, error) {
+func (c *Client) UpdateItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, params ItemParams, itemID int32) (*Item, error) {
 	var result ItemResponse
 	err := c.call(ctx, path.Join(APIPathItems, fmt.Sprint(itemID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
@@ -89,7 +91,7 @@ func (c *Client) UpdateItem(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	return &result.Item, nil
 }
 
-func (c *Client) DestroyItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, itemID int32) error {
+func (c *Client) DestroyItem(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, itemID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
 		return err

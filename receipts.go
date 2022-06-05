@@ -33,36 +33,38 @@ type ReceiptResponse struct {
 	Receipt Receipt `json:"receipt"`
 }
 
+type Recipts struct {
+	Recipts []Receipt `json:"recipts"`
+}
+
 type Receipt struct {
 	// 証憑ID
 	ID int32 `json:"id"`
 	// ステータス(unconfirmed:確認待ち、confirmed:確認済み、deleted:削除済み、ignored:無視)
 	Status string `json:"status"`
 	// メモ
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// MIMEタイプ
 	MimeType string `json:"mime_type"`
 	// 発生日
-	IssueDate string `json:"issue_date,omitempty"`
+	IssueDate *string `json:"issue_date,omitempty"`
 	// アップロード元種別
 	Origin string `json:"origin"`
 	// 作成日時（ISO8601形式）
-	CreatedAt string `json:"created_at"`
-	// ファイルのダウンロードURL（freeeにログインした状態でのみ閲覧可能です。） <br> <br> file_srcは廃止予定の属性になります。<br> file_srcに替わり、証憑ファイルのダウンロード APIをご利用ください。<br> 証憑ファイルのダウンロードAPIを利用することで、以下のようになります。 <ul>   <li>アプリケーション利用者はfreee APIアプリケーションにログインしていれば、証憑ダウンロード毎にfreeeに改めてログインすることなくファイルが参照できるようになります。</li> </ul>
-	FileSrc string             `json:"file_src"`
-	User    UserCreatedReceipt `json:"user"`
+	CreatedAt string             `json:"created_at"`
+	User      UserCreatedReceipt `json:"user"`
 }
 
 type GetReceiptOpts struct {
-	StartDate        string `url:"start_date"`
-	EndDate          string `url:"end_date"`
-	UserName         string `url:"user_name,omitempty"`
-	Number           int32  `url:"number,omitempty"`
-	CommentType      string `url:"comment_type,omitempty"`
-	CommentImportant bool   `url:"comment_important,omitempty"`
-	Category         string `url:"category,omitempty"`
-	Offset           uint32 `url:"offset,omitempty"`
-	Limit            uint32 `url:"limit,omitempty"`
+	StartDate        string  `url:"start_date"`
+	EndDate          string  `url:"end_date"`
+	UserName         *string `url:"user_name,omitempty"`
+	Number           *int32  `url:"number,omitempty"`
+	CommentType      *string `url:"comment_type,omitempty"`
+	CommentImportant *bool   `url:"comment_important,omitempty"`
+	Category         *string `url:"category,omitempty"`
+	Offset           *uint32 `url:"offset,omitempty"`
+	Limit            *uint32 `url:"limit,omitempty"`
 }
 
 type UserCreatedReceipt struct {
@@ -71,7 +73,7 @@ type UserCreatedReceipt struct {
 	// メールアドレス
 	Email string `json:"email"`
 	// 表示名
-	DisplayName string `json:"display_name,omitempty"`
+	DisplayName *string `json:"display_name,omitempty"`
 }
 
 func (c *Client) CreateReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSource, params CreateReceiptParams, receiptName string) (*ReceiptResponse, error) {
@@ -88,7 +90,7 @@ func (c *Client) CreateReceipt(ctx context.Context, reuseTokenSource oauth2.Toke
 	return &result, nil
 }
 
-func (c *Client) GetReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, receiptID int32) (*ReceiptResponse, error) {
+func (c *Client) GetReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, receiptID int32) (*ReceiptResponse, error) {
 	var result ReceiptResponse
 
 	v, err := query.Values(nil)
@@ -100,5 +102,21 @@ func (c *Client) GetReceipt(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	if err != nil {
 		return nil, err
 	}
+	return &result, nil
+}
+
+func (c *Client) GetReceipts(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Recipts, error) {
+	var result Recipts
+
+	v, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+	SetCompanyID(&v, companyID)
+	err = c.call(ctx, APIPathReceipts, http.MethodGet, reuseTokenSource, v, nil, &result)
+	if err != nil {
+		return nil, err
+	}
+
 	return &result, nil
 }

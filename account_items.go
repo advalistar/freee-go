@@ -25,14 +25,14 @@ type AccountItem struct {
 	ID int32 `json:"id"`
 	// 勘定科目名 (30文字以内)
 	Name string `json:"name"`
+	// 税区分コード
+	TaxCode int32 `json:"tax_code"`
 	// ショートカット1 (20文字以内)
 	Shortcut *string `json:"shortcut,omitempty"`
 	// ショートカット2(勘定科目コード) (20文字以内)
 	ShortcutNum *string `json:"shortcut_num,omitempty"`
-	// 税区分コード
-	TaxCode int32 `json:"tax_code"`
 	// デフォルト設定がされている税区分ID
-	DefaultTaxID int32 `json:"default_tax_id,omitempty"`
+	DefaultTaxID *int32 `json:"default_tax_id,omitempty"`
 	// デフォルト設定がされている税区分コード
 	DefaultTaxCode int32 `json:"default_tax_code"`
 	// 勘定科目カテゴリー
@@ -43,7 +43,7 @@ type AccountItem struct {
 	// 勘定科目の使用設定（true: 使用する、false: 使用しない）
 	Available bool `json:"available"`
 	// 口座ID
-	WalletableID *int32 `json:"walletable_id"`
+	WalletableID int32 `json:"walletable_id"`
 	// 決算書表示名（小カテゴリー）
 	GroupName *string `json:"group_name,omitempty"`
 	// 収入取引相手勘定科目名
@@ -56,7 +56,7 @@ type AccountItem struct {
 	CorrespondingExpenseID *int32 `json:"corresponding_expense_id,omitempty"`
 }
 
-func (c *Client) GetAccountItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*AccountItems, error) {
+func (c *Client) GetAccountItems(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*AccountItems, error) {
 	var result AccountItems
 
 	v, err := query.Values(opts)

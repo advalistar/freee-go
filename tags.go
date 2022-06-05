@@ -28,7 +28,9 @@ type Tag struct {
 	// 事業所ID
 	CompanyID int32 `json:"company_id"`
 	// 名前(30文字以内)
-	Name *string `json:"name"`
+	Name string `json:"name"`
+	// 更新日(yyyy-mm-dd)
+	UpdateDate string `json:"update_date"`
 	// ショートカット1 (255文字以内)
 	Shortcut1 *string `json:"shortcut1,omitempty"`
 	// ショートカット2 (255文字以内)
@@ -47,11 +49,13 @@ type TagParams struct {
 }
 
 type GetTagsOpts struct {
-	Offset uint32 `url:"offset,omitempty"`
-	Limit  uint32 `url:"limit,omitempty"`
+	StartUpdateDate string `url:"start_update_date,omitempty"`
+	EndUpdateDate   string `url:"end_update_date,omitempty"`
+	Offset          int32  `url:"offset,omitempty"`
+	Limit           int32  `url:"limit,omitempty"`
 }
 
-func (c *Client) GetTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, opts interface{}) (*Tags, error) {
+func (c *Client) GetTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)
@@ -76,7 +80,7 @@ func (c *Client) CreateTag(ctx context.Context, reuseTokenSource oauth2.TokenSou
 	return &result.Tag, nil
 }
 
-func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID uint32, opts interface{}) (*Tags, error) {
+func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, tagID int32, opts interface{}) (*Tags, error) {
 	var result Tags
 
 	v, err := query.Values(opts)
@@ -92,7 +96,7 @@ func (c *Client) GetTag(ctx context.Context, reuseTokenSource oauth2.TokenSource
 	return &result, nil
 }
 
-func (c *Client) UpdateTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, tagID uint32, params TagParams) (*Tag, error) {
+func (c *Client) UpdateTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, tagID int32, params TagParams) (*Tag, error) {
 	var result TagResponse
 	err := c.call(ctx, path.Join(APIPathTags, fmt.Sprint(tagID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
@@ -101,7 +105,7 @@ func (c *Client) UpdateTag(ctx context.Context, reuseTokenSource oauth2.TokenSou
 	return &result.Tag, nil
 }
 
-func (c *Client) DestroyTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, tagID int32) error {
+func (c *Client) DestroyTag(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, tagID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
 		return err

@@ -13,6 +13,14 @@ const (
 	APIPathUsers = "users"
 )
 
+type GetUsersOpts struct {
+	Limit *int32 `url:"limit,omitempty"`
+}
+
+type Users struct {
+	User []User `json:"users"`
+}
+
 type Me struct {
 	User User `json:"user"`
 }
@@ -31,8 +39,8 @@ type User struct {
 	// 名（カナ）
 	FirstNameKana *string `json:"first_name_kana,omitempty"`
 	// 姓（カナ）
-	LastNameKana *string       `json:"last_name_kana,omitempty"`
-	Companies    []UserCompany `json:"companies,omitempty"`
+	LastNameKana *string        `json:"last_name_kana,omitempty"`
+	Companies    *[]UserCompany `json:"companies,omitempty"`
 }
 
 type UserCompany struct {
@@ -48,6 +56,22 @@ type UserCompany struct {
 
 type GetUsersMeOpts struct {
 	Companies bool `url:"companies,omitempty"`
+}
+
+func (c *Client) GetUsers(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Users, error) {
+	var result Users
+
+	v, err := query.Values(opts)
+	if err != nil {
+		return nil, err
+	}
+	SetCompanyID(&v, companyID)
+	err = c.call(ctx, APIPathUsers, http.MethodGet, reuseTokenSource, v, nil, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
 
 func (c *Client) GetUsersMe(ctx context.Context, reuseTokenSource oauth2.TokenSource, opts interface{}) (*Me, error) {

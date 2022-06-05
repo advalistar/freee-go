@@ -25,14 +25,22 @@ type SectionResponse struct {
 type Section struct {
 	// 品目ID
 	ID int32 `json:"id"`
-	// 事業所ID
-	CompanyID int32 `json:"company_id"`
 	// 品目名 (30文字以内)
 	Name string `json:"name"`
+	// 部門の使用設定（true: 使用する、false: 使用しない）
+	Available bool `json:"available"`
+	// 正式名称（255文字以内）
+	LongName *string `json:"long_name,omitempty"`
+	// 事業所ID
+	CompanyID int32 `json:"company_id"`
 	// ショートカット１ (20文字以内)
 	Shortcut1 *string `json:"shortcut1,omitempty"`
 	// ショートカット２ (20文字以内)
 	Shortcut2 *string `json:"shortcut2,omitempty"`
+	// 部門階層
+	IndentCount *int32 `json:"indent_count,omitempty"`
+	// 親部門ID
+	ParentID *int32 `json:"parent_id,omitempty"`
 }
 
 type SectionParams struct {
@@ -50,7 +58,7 @@ type SectionParams struct {
 	ParentID *int32 `json:"parent_id,omitempty"`
 }
 
-func (c *Client) GetSections(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32) (*Sections, error) {
+func (c *Client) GetSections(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*Sections, error) {
 	var result Sections
 
 	v, err := query.Values(nil)
@@ -75,7 +83,7 @@ func (c *Client) CreateSection(ctx context.Context, reuseTokenSource oauth2.Toke
 	return &result.Section, nil
 }
 
-func (c *Client) UpdateSection(ctx context.Context, reuseTokenSource oauth2.TokenSource, sectionID uint32, params SectionParams) (*Section, error) {
+func (c *Client) UpdateSection(ctx context.Context, reuseTokenSource oauth2.TokenSource, sectionID int32, params SectionParams) (*Section, error) {
 	var result SectionResponse
 	err := c.call(ctx, path.Join(APIPathSections, fmt.Sprint(sectionID)), http.MethodPut, reuseTokenSource, nil, params, &result)
 	if err != nil {
@@ -84,7 +92,7 @@ func (c *Client) UpdateSection(ctx context.Context, reuseTokenSource oauth2.Toke
 	return &result.Section, nil
 }
 
-func (c *Client) DestroySection(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID uint32, sectionID int32) error {
+func (c *Client) DestroySection(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, sectionID int32) error {
 	v, err := query.Values(nil)
 	if err != nil {
 		return err
