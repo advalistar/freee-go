@@ -74,7 +74,7 @@ type WalletTxn struct {
 	RuleMatched bool `json:"rule_matched"`
 }
 
-func (c *Client) GetWalletTransactions(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts GetWalletTxnOpts) (*WalletTxnsResponse, error) {
+func (c *Client) GetWalletTxns(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts GetWalletTxnOpts) (*WalletTxnsResponse, error) {
 	var result WalletTxnsResponse
 
 	if (opts.WalletableType != "" && opts.WalletableID == 0) || (opts.WalletableID != 0 && opts.WalletableType == "") {

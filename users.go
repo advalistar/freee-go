@@ -14,7 +14,7 @@ const (
 )
 
 type GetUsersOpts struct {
-	Limit *int32 `url:"limit,omitempty"`
+	Limit int32 `url:"limit,omitempty"`
 }
 
 type Users struct {
