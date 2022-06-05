@@ -63,8 +63,8 @@ type GetReceiptOpts struct {
 	CommentType      string `url:"comment_type,omitempty"`
 	CommentImportant bool   `url:"comment_important,omitempty"`
 	Category         string `url:"category,omitempty"`
-	Offset           uint32 `url:"offset,omitempty"`
-	Limit            uint32 `url:"limit,omitempty"`
+	Offset           int32  `url:"offset,omitempty"`
+	Limit            int32  `url:"limit,omitempty"`
 }
 
 type UserCreatedReceipt struct {

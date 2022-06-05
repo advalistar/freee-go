@@ -57,8 +57,8 @@ type GetDealOpts struct {
 	StartRenewDate string `url:"start_renew_date,omitempty"`
 	// +更新日で絞込：終了日(yyyy-mm-dd)
 	EndRenewDate string `url:"end_renew_date,omitempty"`
-	Offset       uint32 `url:"offset,omitempty"`
-	Limit        uint32 `url:"limit,omitempty"`
+	Offset       int32  `url:"offset,omitempty"`
+	Limit        int32  `url:"limit,omitempty"`
 	// 取引登録元アプリで絞込（me: 本APIを叩くアプリ自身から登録した取引のみ）
 	RegisteredFrom string `url:"registered_from,omitempty"`
 	// 取引の債権債務行の表示（without: 表示しない(デフォルト), with: 表示する）

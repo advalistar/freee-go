@@ -52,8 +52,8 @@ type SegmentTagParams struct {
 }
 
 type GetSegmentTagsOpts struct {
-	Offset uint32 `url:"offset,omitempty"`
-	Limit  uint32 `url:"limit,omitempty"`
+	Offset int32 `url:"offset,omitempty"`
+	Limit  int32 `url:"limit,omitempty"`
 }
 
 func (c *Client) GetSegmentTags(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, segmentID int32, opts interface{}) (*SegmentTags, error) {
