@@ -46,8 +46,8 @@ type GetReportsOpts struct {
 	ApprovalFlowStatus string `url:"approval_flow_status,omitempty"`
 }
 
-type TrialBsResponse struct {
-	TrialBs Report `json:"trial_bs"`
+type TrialBSResponse struct {
+	TrialBS Report `json:"trial_bs"`
 }
 
 type Report struct {
@@ -80,7 +80,7 @@ type Report struct {
 	// 未承認を除く: without_in_progress (デフォルト), 全てのステータス: all(条件に指定した時のみ含まれる）
 	ApprovalFlowStatus *string `json:"approval_flow_status,omitempty"`
 	// 作成日時
-	CreatedAt *string   `json:"created_at,omitempty"`
+	CReatedAt *string   `json:"created_at,omitempty"`
 	Balances  []Balance `json:"balances,omitempty"`
 	// 集計結果が最新かどうか
 	UpToDate bool `json:"up_to_date"`
@@ -123,7 +123,7 @@ type Balance struct {
 	// 借方金額
 	DebitAmount *int32 `json:"debit_amount,omitempty"`
 	// 貸方金額
-	CreditAmount *int32 `json:"credit_amount,omitempty"`
+	CReditAmount *int32 `json:"credit_amount,omitempty"`
 	// 期末残高
 	ClosingBalance *int32 `json:"closing_balance,omitempty"`
 	// 構成比
@@ -146,7 +146,7 @@ type BalanceBreakdown struct {
 	// 借方金額
 	DebitAmount *int32 `json:"debit_amount,omitempty"`
 	// 貸方金額
-	CreditAmount *int32 `json:"credit_amount,omitempty"`
+	CReditAmount *int32 `json:"credit_amount,omitempty"`
 	// 期末残高
 	ClosingBalance *int32 `json:"closing_balance,omitempty"`
 	// 構成比
@@ -161,40 +161,40 @@ type BalanceBreakdown struct {
 	TwoYearsBeforeClosingBalance *int32 `json:"two_years_before_closing_balance,omitempty"`
 }
 
-type TrialBsTwoYearsResponse struct {
-	TrialBsTwoYears Report `json:"trial_bs_two_years"`
+type TrialBSTwoYearsResponse struct {
+	TrialBSTwoYears Report `json:"trial_bs_two_years"`
 }
 
-type TrialBsThreeYearsResponse struct {
-	TrialBsThreeYears Report `json:"trial_bs_three_years"`
+type TrialBSThreeYearsResponse struct {
+	TrialBSThreeYears Report `json:"trial_bs_three_years"`
 }
 
-type TrialPlResponse struct {
-	TrialPl Report `json:"trial_pl"`
+type TrialPLResponse struct {
+	TrialPL Report `json:"trial_pl"`
 }
 
-type TrialPlTwoYearsResponse struct {
-	TrialPlTwoYears Report `json:"trial_pl_two_years"`
+type TrialPLTwoYearsResponse struct {
+	TrialPLTwoYears Report `json:"trial_pl_two_years"`
 }
 
-type TrialPlThreeYearsResponse struct {
-	TrialPlThreeYears Report `json:"trial_pl_three_years"`
+type TrialPLThreeYearsResponse struct {
+	TrialPLThreeYears Report `json:"trial_pl_three_years"`
 }
 
-type TrialCrResponse struct {
-	TrialCr Report `json:"trial_cr"`
+type TrialCRResponse struct {
+	TrialCR Report `json:"trial_cr"`
 }
 
-type TrialCrTwoYearsResponse struct {
-	TrialCrTwoYears Report `json:"trial_cr_two_years"`
+type TrialCRTwoYearsResponse struct {
+	TrialCRTwoYears Report `json:"trial_cr_two_years"`
 }
 
-type TrialCrThreeYearsResponse struct {
-	TrialCrThreeYears Report `json:"trial_cr_three_years"`
+type TrialCRThreeYearsResponse struct {
+	TrialCRThreeYears Report `json:"trial_cr_three_years"`
 }
 
-func (c *Client) GetTrialBs(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBsResponse, error) {
-	var result TrialBsResponse
+func (c *Client) GetTrialBS(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBSResponse, error) {
+	var result TrialBSResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -208,8 +208,8 @@ func (c *Client) GetTrialBs(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	return &result, nil
 }
 
-func (c *Client) GetTrialBsTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBsTwoYearsResponse, error) {
-	var result TrialBsTwoYearsResponse
+func (c *Client) GetTrialBSTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBSTwoYearsResponse, error) {
+	var result TrialBSTwoYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -223,8 +223,8 @@ func (c *Client) GetTrialBsTwoYears(ctx context.Context, reuseTokenSource oauth2
 	return &result, nil
 }
 
-func (c *Client) GetTrialBsThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBsThreeYearsResponse, error) {
-	var result TrialBsThreeYearsResponse
+func (c *Client) GetTrialBSThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialBSThreeYearsResponse, error) {
+	var result TrialBSThreeYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -238,8 +238,8 @@ func (c *Client) GetTrialBsThreeYears(ctx context.Context, reuseTokenSource oaut
 	return &result, nil
 }
 
-func (c *Client) GetTrialPl(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPlResponse, error) {
-	var result TrialPlResponse
+func (c *Client) GetTrialPL(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPLResponse, error) {
+	var result TrialPLResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -253,8 +253,8 @@ func (c *Client) GetTrialPl(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	return &result, nil
 }
 
-func (c *Client) GetTrialPlTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPlTwoYearsResponse, error) {
-	var result TrialPlTwoYearsResponse
+func (c *Client) GetTrialPLTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPLTwoYearsResponse, error) {
+	var result TrialPLTwoYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -268,8 +268,8 @@ func (c *Client) GetTrialPlTwoYears(ctx context.Context, reuseTokenSource oauth2
 	return &result, nil
 }
 
-func (c *Client) GetTrialPlThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPlThreeYearsResponse, error) {
-	var result TrialPlThreeYearsResponse
+func (c *Client) GetTrialPLThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialPLThreeYearsResponse, error) {
+	var result TrialPLThreeYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -283,8 +283,8 @@ func (c *Client) GetTrialPlThreeYears(ctx context.Context, reuseTokenSource oaut
 	return &result, nil
 }
 
-func (c *Client) GetTrialCr(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCrResponse, error) {
-	var result TrialCrResponse
+func (c *Client) GetTrialCR(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCRResponse, error) {
+	var result TrialCRResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -298,8 +298,8 @@ func (c *Client) GetTrialCr(ctx context.Context, reuseTokenSource oauth2.TokenSo
 	return &result, nil
 }
 
-func (c *Client) GetTrialCrTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCrTwoYearsResponse, error) {
-	var result TrialCrTwoYearsResponse
+func (c *Client) GetTrialCRTwoYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCRTwoYearsResponse, error) {
+	var result TrialCRTwoYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {
@@ -313,8 +313,8 @@ func (c *Client) GetTrialCrTwoYears(ctx context.Context, reuseTokenSource oauth2
 	return &result, nil
 }
 
-func (c *Client) GetTrialCrThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCrThreeYearsResponse, error) {
-	var result TrialCrThreeYearsResponse
+func (c *Client) GetTrialCRThreeYears(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*TrialCRThreeYearsResponse, error) {
+	var result TrialCRThreeYearsResponse
 
 	v, err := query.Values(nil)
 	if err != nil {

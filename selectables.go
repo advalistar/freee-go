@@ -13,6 +13,10 @@ const (
 	APIPathSelectables = "selectables"
 )
 
+type SelectablesOpts struct {
+	Includes int32 `url:"includes"`
+}
+
 type Selectables struct {
 	AccountCategories []AccountCategory `json:"account_categories"`
 	AccountGroups     []AccountGroup    `json:"account_groups"`
@@ -78,10 +82,10 @@ type AccountGroup struct {
 	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
-func (c *Client) GetSelectables(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32) (*Selectables, error) {
+func (c *Client) GetSelectables(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Selectables, error) {
 	var result Selectables
 
-	v, err := query.Values(nil)
+	v, err := query.Values(opts)
 	if err != nil {
 		return nil, err
 	}

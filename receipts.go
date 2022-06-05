@@ -56,15 +56,15 @@ type Receipt struct {
 }
 
 type GetReceiptOpts struct {
-	StartDate        string  `url:"start_date"`
-	EndDate          string  `url:"end_date"`
-	UserName         *string `url:"user_name,omitempty"`
-	Number           *int32  `url:"number,omitempty"`
-	CommentType      *string `url:"comment_type,omitempty"`
-	CommentImportant *bool   `url:"comment_important,omitempty"`
-	Category         *string `url:"category,omitempty"`
-	Offset           *uint32 `url:"offset,omitempty"`
-	Limit            *uint32 `url:"limit,omitempty"`
+	StartDate        string `url:"start_date"`
+	EndDate          string `url:"end_date"`
+	UserName         string `url:"user_name,omitempty"`
+	Number           int32  `url:"number,omitempty"`
+	CommentType      string `url:"comment_type,omitempty"`
+	CommentImportant bool   `url:"comment_important,omitempty"`
+	Category         string `url:"category,omitempty"`
+	Offset           uint32 `url:"offset,omitempty"`
+	Limit            uint32 `url:"limit,omitempty"`
 }
 
 type UserCreatedReceipt struct {
