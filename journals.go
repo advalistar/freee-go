@@ -14,11 +14,11 @@ const (
 )
 
 type GetJournalsOpts struct {
-	download_type string   `url:"download_type"`
-	VisibleTags   []string `url:"visible_tags,omitempty"`
-	VisibleIDs    []string `url:"visible_ids,omitempty"`
-	StartDate     string   `url:"start_date,omitempty"`
-	EndDate       string   `url:"end_date,omitempty"`
+	DownloadType string   `url:"download_type"`
+	VisibleTags  []string `url:"visible_tags,omitempty"`
+	VisibleIDs   []string `url:"visible_ids,omitempty"`
+	StartDate    string   `url:"start_date,omitempty"`
+	EndDate      string   `url:"end_date,omitempty"`
 }
 
 type Journals struct {
