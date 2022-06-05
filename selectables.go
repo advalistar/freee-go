@@ -13,7 +13,7 @@ const (
 	APIPathSelectables = "selectables"
 )
 
-type SelectablesOpts struct {
+type GetSelectablesOpts struct {
 	Includes int32 `url:"includes"`
 }
 
