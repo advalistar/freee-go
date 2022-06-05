@@ -18,7 +18,7 @@ type GetUsersOpts struct {
 }
 
 type Users struct {
-	User []User `json:"users"`
+	Users []User `json:"users"`
 }
 
 type Me struct {
