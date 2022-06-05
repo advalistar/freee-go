@@ -270,11 +270,11 @@ func (c *Client) UpdatePartner(ctx context.Context, reuseTokenSource oauth2.Toke
 }
 
 type GetPartnersOpts struct {
-	StartUpdateDate *string `url:"start_update_date,omitempty"`
-	EndUpdateDate   *string `url:"end_update_date,omitempty"`
-	Offset          *int32  `url:"offset,omitempty"`
-	Limit           *int32  `url:"limit,omitempty"`
-	Keyword         *string `url:"keyword,omitempty"`
+	StartUpdateDate string `url:"start_update_date,omitempty"`
+	EndUpdateDate   string `url:"end_update_date,omitempty"`
+	Offset          int32  `url:"offset,omitempty"`
+	Limit           int32  `url:"limit,omitempty"`
+	Keyword         string `url:"keyword,omitempty"`
 }
 
 func (c *Client) GetPartners(ctx context.Context, reuseTokenSource oauth2.TokenSource, companyID int32, opts interface{}) (*Partners, error) {
