@@ -14,7 +14,7 @@ const (
 )
 
 type GetSelectablesOpts struct {
-	Includes int32 `url:"includes"`
+	Includes string `url:"includes"`
 }
 
 type Selectables struct {
