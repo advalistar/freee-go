@@ -151,7 +151,7 @@ type InvoiceContent struct {
 	// 勘定科目名
 	AccountItemName string `json:"account_item_name"`
 	// 税区分コード
-	TaxCode string `json:"tax_code"`
+	TaxCode int32 `json:"tax_code"`
 	// 品目ID
 	ItemID int32 `json:"item_id"`
 	// 品目
