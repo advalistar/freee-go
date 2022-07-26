@@ -43,7 +43,7 @@ type Invoice struct {
 	// 取引先コード
 	PartnerCode *string `json:"partner_code,omitempty"`
 	// 請求書番号
-	InvoiceNumber int32 `json:"invoice_number"`
+	InvoiceNumber string `json:"invoice_number"`
 	// 申請タイトル
 	Title *string `json:"title,omitempty"`
 	// 期日 (yyyy-mm-dd)
