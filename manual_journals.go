@@ -42,7 +42,7 @@ type ManualJournal struct {
 
 type ManualJournalDetails struct {
 	// 貸借行ID
-	ID int32 `json:"id"`
+	ID int64 `json:"id"`
 	// 貸借(貸方: credit, 借方: debit)
 	EntrySide string `json:"entry_side"`
 	// 勘定科目ID
