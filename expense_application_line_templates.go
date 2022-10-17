@@ -3,6 +3,7 @@ package freee
 import (
 	"context"
 	"net/http"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -56,4 +57,15 @@ func (c *Client) GetExpenseApplicationLineTemplates(ctx context.Context, reuseTo
 	}
 
 	return &result, nil
+}
+
+func (s *Client) GetExpenseApplicationLineTemplateOrderList() []string {
+	str := new(ExpenseApplicationLineTemplate)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

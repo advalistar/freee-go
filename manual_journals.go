@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -250,4 +251,15 @@ func (c *Client) GetManualJournals(ctx context.Context, reuseTokenSource oauth2.
 	}
 
 	return &result, nil
+}
+
+func (s *Client) GetManualJournalOrderList() []string {
+	str := new(ManualJournal)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

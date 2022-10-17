@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"path"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -86,4 +87,15 @@ func (c *Client) GetUsersMe(ctx context.Context, reuseTokenSource oauth2.TokenSo
 		return nil, err
 	}
 	return &result, nil
+}
+
+func (s *Client) GetUserOrderList() []string {
+	str := new(User)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

@@ -3,6 +3,7 @@ package freee
 import (
 	"context"
 	"net/http"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -46,4 +47,15 @@ func (c *Client) GetBanks(ctx context.Context, reuseTokenSource oauth2.TokenSour
 	}
 
 	return &result, nil
+}
+
+func (s *Client) GetBankOrderList() []string {
+	str := new(bank)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

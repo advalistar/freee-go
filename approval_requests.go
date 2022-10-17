@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"path"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -125,4 +126,15 @@ func (c *Client) GetApprovalRequestsForms(ctx context.Context, reuseTokenSource 
 	}
 
 	return &result, nil
+}
+
+func (s *Client) GetApprovalRequestsFormOrderList() []string {
+	str := new(ApprovalRequestsForm)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

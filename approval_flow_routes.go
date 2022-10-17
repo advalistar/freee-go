@@ -3,6 +3,7 @@ package freee
 import (
 	"context"
 	"net/http"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -57,4 +58,15 @@ func (c *Client) GetApprovalFlowRoutes(ctx context.Context, reuseTokenSource oau
 	}
 
 	return &result, nil
+}
+
+func (s *Client) GetApprovalFlowRouteOrderList() []string {
+	str := new(ApprovalFlowRoute)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"path"
+	"reflect"
 
 	"github.com/google/go-querystring/query"
 	"golang.org/x/oauth2"
@@ -326,4 +327,15 @@ func (c *Client) GetTrialCRThreeYears(ctx context.Context, reuseTokenSource oaut
 		return nil, err
 	}
 	return &result, nil
+}
+
+func (s *Client) GetReportOrderList() []string {
+	str := new(Report)
+
+	var orderList []string
+	for i := 0; i < reflect.TypeOf(*str).NumField(); i++ {
+		orderList = append(orderList, reflect.TypeOf(*str).Field(i).Tag.Get("json"))
+	}
+
+	return orderList
 }
